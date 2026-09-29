@@ -75,7 +75,7 @@ No external hardware watchdog HAT is required by version 2.2.0.
 sudo apt update
 sudo apt install -y git python3-venv python3-lgpio
 git clone https://github.com/naoyakadota/GNSSlogger
-cd gps-logger
+cd GNSSlogger
 sudo ./setup.sh
 ```
 
@@ -90,8 +90,7 @@ The installer asks for:
 3. FTP user ID;
 4. FTP password (input is hidden);
 5. FTP parent directory (the device/site name is appended automatically);
-6. a serial device only when selection is required;
-7. the local GNSS data directory.
+6. the local GNSS data directory.
 
 Default local data location:
 
@@ -249,16 +248,16 @@ reports.
 
 ## 8. Serial-port and baud detection
 
-At installation, `/dev/serial/by-id/` is preferred because its names are more
-stable than `/dev/ttyACM0`. One detected device is selected automatically. If
-multiple devices exist, the installer asks which one is the GNSS receiver. If
-none is connected, `port = auto` is saved.
-
-At runtime, `port = auto` checks:
+New installations save `port = auto`. At startup and after every disconnect,
+the logger checks:
 
 1. `/dev/serial/by-id/*`;
 2. USB serial devices reported by pySerial under `/dev/ttyACM*` and
    `/dev/ttyUSB*`.
+
+This allows a receiver to be replaced even when its `/dev/serial/by-id/` name
+changes. If a system has multiple NMEA serial devices, set `port` manually to
+the intended `/dev/serial/by-id/...` path.
 
 For `baud = auto`, each configured baud is tried until a `$`-prefixed sentence
 is received. A known configuration may instead use a fixed path and/or fixed

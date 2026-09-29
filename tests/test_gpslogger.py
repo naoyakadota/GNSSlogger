@@ -147,6 +147,15 @@ class GPSLoggerTests(unittest.TestCase):
         self.assertTrue(devices[0].closed)
         self.assertIs(device, devices[1])
 
+    def test_binary_receiver_output_is_ignored_before_utf8_decode(self):
+        self.assertIsNone(gps.decode_nmea_sentence(b"\xd3\x00\xff\r\n"))
+
+    def test_nmea_receiver_output_is_decoded(self):
+        self.assertEqual(
+            gps.decode_nmea_sentence(b"$GPGGA,test\r\n"),
+            "$GPGGA,test\r\n",
+        )
+
     def test_remote_directory_creates_only_missing_components(self):
         ftp = FakeFTP(existing={"/parent"})
         gps.ensure_remote_directory(ftp, "/parent/TEST1")

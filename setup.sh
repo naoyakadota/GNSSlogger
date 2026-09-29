@@ -72,37 +72,6 @@ print(parent / sys.argv[2])
 PY
 }
 
-choose_initial_serial_port() {
-  local ports=()
-  local selection
-  shopt -s nullglob
-  ports=(/dev/serial/by-id/*)
-  shopt -u nullglob
-
-  if (( ${#ports[@]} == 0 )); then
-    printf 'auto'
-  elif (( ${#ports[@]} == 1 )); then
-    echo "Detected serial device: ${ports[0]}" >&2
-    printf '%s' "${ports[0]}"
-  else
-    echo "Multiple serial devices were detected:" >&2
-    local index=1
-    for port in "${ports[@]}"; do
-      echo "  $index) $port" >&2
-      ((index += 1))
-    done
-    while true; do
-      read -r -p "Select the GNSS serial device [1]: " selection
-      selection="${selection:-1}"
-      if [[ "$selection" =~ ^[0-9]+$ ]] && (( selection >= 1 && selection <= ${#ports[@]} )); then
-        printf '%s' "${ports[selection-1]}"
-        return
-      fi
-      echo "Please enter a number from 1 to ${#ports[@]}." >&2
-    done
-  fi
-}
-
 old_device="$(existing_value device name)"
 old_host="$(existing_value ftp host)"
 old_user="$(existing_value ftp user)"
@@ -154,11 +123,11 @@ fi
 ftp_parent_dir="$(prompt_default 'FTP parent directory' "${old_remote_parent:-/Naoya_FieldSensors/GPS}")"
 ftp_remote_dir="$(build_remote_dir "$ftp_parent_dir" "$device_name")"
 echo "FTP device directory: $ftp_remote_dir"
-if [[ -z "$old_port" ]]; then
-  serial_port="$(choose_initial_serial_port)"
-else
-  serial_port="$(prompt_default 'Serial port (or auto)' "$old_port")"
-fi
+# New installations use runtime discovery so replacing a receiver does not
+# leave the service pinned to a stale /dev/serial/by-id path. Preserve an
+# existing explicit setting during updates; it can be changed to auto in
+# config.ini when device replacement is desired.
+serial_port="${old_port:-auto}"
 serial_baud="${old_baud:-auto}"
 ftp_port="${old_ftp_port:-21}"
 baud_candidates="${old_baud_candidates:-115200,9600,38400,57600,230400,460800}"
@@ -214,9 +183,9 @@ chown "$install_user:$install_group" "$log_dir"
 install -m 0755 "$source_dir/GPSlogger.py" "$install_dir/GPSlogger.py"
 install -m 0644 "$source_dir/requirements.txt" "$install_dir/requirements.txt"
 
-# Raspberry Pi OS provides the Pi 5-capable lgpio backend as the system
-# package python3-lgpio. Expose system packages inside the otherwise dedicated
-# venv so gpiozero can use that backend.
+# Raspberry Pi OS provides the all-model lgpio backend as the system package
+# python3-lgpio. Expose system packages inside the otherwise dedicated venv so
+# gpiozero can use that backend on Pi 3A+ and current Raspberry Pi models.
 python3 -m venv --system-site-packages "$install_dir/.venv"
 "$install_dir/.venv/bin/python" -m pip install --upgrade pip
 "$install_dir/.venv/bin/python" -m pip install -r "$install_dir/requirements.txt"

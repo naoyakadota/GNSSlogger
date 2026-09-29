@@ -2,6 +2,10 @@
 
 ## 2.2.0 - 2026-09-26
 
+- Made `port = auto` the default for new installations so replacement GNSS
+  receivers are rediscovered at startup and after disconnects.
+- Ignore non-`$` binary receiver output before UTF-8 decoding, avoiding warning
+  spam from mixed RTCM/UBX and NMEA streams.
 - Made rather radical changes to the codebase. The aim of this update is to increase usability and simplifying system setup by adding further automations to the setup/config processes. 
 - The pakcage now have setup.sh to help you set up the system with help of command-line interface(CLI). The code will be uploaded to GitHub so installation and future software updates can be done through `git clone https://github.com/naoyakadota/GNSSlogger`.
 - Moved device, serial, storage, reset, and FTP settings into `/etc/gps-logger/config.ini`.

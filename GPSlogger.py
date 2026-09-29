@@ -196,6 +196,17 @@ def send_startup_commands(ser) -> None:
         time.sleep(max(0.0, startup_command_delay_sec))
 
 
+def decode_nmea_sentence(raw_line: bytes) -> str | None:
+    """Decode only NMEA text and silently ignore binary receiver output."""
+    if not raw_line.startswith(b"$"):
+        return None
+    try:
+        return raw_line.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        print(f"serial decode error; NMEA line ignored: {exc}")
+        return None
+
+
 def open_serial():
     """Open a receiver and optionally identify its port and baud from NMEA."""
     fixed_port = serial_port_setting.lower() != "auto"
@@ -258,12 +269,8 @@ def GNSSlogger() -> None:
                 raw_line = pending_raw if pending_raw is not None else ser.readline()
                 pending_raw = None
                 if raw_line:
-                    try:
-                        line = raw_line.decode("utf-8")
-                    except UnicodeDecodeError as exc:
-                        print(f"serial decode error; line ignored: {exc}")
-                        line = ""
-                    if line.startswith("$"):
+                    line = decode_nmea_sentence(raw_line)
+                    if line is not None:
                         last_valid_sentence = time.monotonic()
                         append_sentence(line, datetime.now())
                 # Finite serial timeout allows this check even when input is silent.

@@ -58,7 +58,7 @@ https://content.u-blox.com/sites/default/files/ZED-F9P_IntegrationManual_UBX-180
 sudo apt update
 sudo apt install -y git python3-venv python3-lgpio
 git clone https://github.com/naoyakadota/GNSSlogger
-cd gps-logger
+cd GNSSlogger
 sudo ./setup.sh
 ```
 
@@ -72,8 +72,7 @@ installerが質問する内容:
 3. FTP user ID
 4. FTP password（入力は画面に表示されません）
 5. FTP上の親directory（device/site名は自動付加）
-6. 選択が必要な場合のみserial device
-7. ローカルGNSS data directory
+6. ローカルGNSS data directory
 
 ローカル保存先の既定値:
 
@@ -220,12 +219,12 @@ log_dir = /home/pi/GPS_data/<YourDeviceName>
 
 ## 8. Serial portとbaudの判定
 
-installation時は、`/dev/ttyACM0`より名前が安定しやすい`/dev/serial/by-id/`を優先します。1台なら自動選択、複数ならGNSS受信機を質問します。接続機器がなければ`port = auto`を保存します。
-
-runtimeで`port = auto`の場合、次を確認します。
+新規installationでは`port = auto`を保存します。起動時とserial切断後の再接続時に、次を確認します。
 
 1. `/dev/serial/by-id/*`
 2. pySerialが報告する`/dev/ttyACM*`と`/dev/ttyUSB*`
+
+これにより、受信機を別個体へ交換して`/dev/serial/by-id/`名が変わっても再検出できます。NMEAを出力するserial機器が複数ある場合は、使用する`/dev/serial/by-id/...` pathを`port`へ手動指定してください。
 
 `baud = auto`では、設定された候補を順番に試し、`$`で始まるセンテンスを受信できた値を採用します。portやbaudが既知なら固定値も指定できます。
 
