@@ -3,7 +3,7 @@
 ## 2.2.0 - 2026-09-26
 
 - Made rather radical changes to the codebase. The aim of this update is to increase usability and simplifying system setup by adding further automations to the setup/config processes. 
-- The pakcage now have setup.sh to help you set up the system with help of command-line interface(CLI). The code will be uploaded to GitHub so installation and future software updates can be done through `git clone https://github.com/nkadota/GNSSlogger`.
+- The pakcage now have setup.sh to help you set up the system with help of command-line interface(CLI). The code will be uploaded to GitHub so installation and future software updates can be done through `git clone https://github.com/naoyakadota/GNSSlogger`.
 - Moved device, serial, storage, reset, and FTP settings into `/etc/gps-logger/config.ini`.
 - Fixed the installed program path is now at `/opt/gps-logger/GPSlogger.py`.
 - Changed the default observed GPS NMEA data location to the installing user's

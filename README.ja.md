@@ -54,12 +54,10 @@ https://content.u-blox.com/sites/default/files/ZED-F9P_IntegrationManual_UBX-180
 
 ## 4. GitHubからのインストール
 
-公開後、`<REPOSITORY_URL>`を実際のrepository URLへ置き換えてください。
-
 ```bash
 sudo apt update
 sudo apt install -y git python3-venv python3-lgpio
-git clone <REPOSITORY_URL> gps-logger
+git clone https://github.com/naoyakadota/GNSSlogger
 cd gps-logger
 sudo ./setup.sh
 ```
@@ -117,10 +115,10 @@ Use this existing directory for this device? [y/N]:
 
 ## 5. 配置ファイルと生成ファイル
 
-update時に設定や観測dataを上書きしないよう、用途別に分けます。
+ファイル配置は以下の通りです。
 
 ```text
-Git clone（source）          ~/gps-logger/
+Git clone（source）          ~/GNSSlogger/
 実行プログラム               /opt/gps-logger/GPSlogger.py
 Python仮想環境               /opt/gps-logger/.venv/
 認証情報・設定情報           /etc/gps-logger/config.ini

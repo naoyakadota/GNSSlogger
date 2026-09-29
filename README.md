@@ -70,12 +70,11 @@ No external hardware watchdog HAT is required by version 2.2.0.
 
 ## 4. Installation from GitHub
 
-Replace `<REPOSITORY_URL>` with the repository URL after publication:
 
 ```bash
 sudo apt update
 sudo apt install -y git python3-venv python3-lgpio
-git clone <REPOSITORY_URL> gps-logger
+git clone https://github.com/naoyakadota/GNSSlogger
 cd gps-logger
 sudo ./setup.sh
 ```
@@ -144,7 +143,7 @@ The files are separated by purpose so an update does not overwrite settings or
 observations:
 
 ```text
-Git clone (source)       ~/gps-logger/
+Git clone (source)       ~/GNSSlogger/
 Installed program       /opt/gps-logger/GPSlogger.py
 Python environment      /opt/gps-logger/.venv/
 Private configuration   /etc/gps-logger/config.ini
