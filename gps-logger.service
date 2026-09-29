@@ -1,0 +1,12 @@
+[Unit]
+Description=GPS logger by Naoya Kadota (https://nkadota.com)
+
+[Service]
+WorkingDirectory=/opt/gps-logger/
+Environment=GPS_LOGGER_CONFIG=/etc/gps-logger/config.ini
+ExecStart=/opt/gps-logger/.venv/bin/python /opt/gps-logger/GPSlogger.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

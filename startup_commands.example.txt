@@ -1,0 +1,8 @@
+# Optional receiver startup commands.
+#
+# Put one text command on each line. Blank lines and lines beginning with #
+# are ignored. GPSlogger appends CRLF by default and sends these commands
+# after every serial connection/reconnection.
+#
+# Leave this file with comments only when the receiver starts NMEA output by
+# itself. Binary receiver commands are not supported by this text file.
