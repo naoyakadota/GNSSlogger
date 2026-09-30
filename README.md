@@ -72,7 +72,7 @@ No external hardware watchdog HAT is required by version 2.2.0.
 
 
 ```bash
-sudo apt update
+sudo apt updateå
 sudo apt install -y git python3-venv python3-lgpio
 git clone https://github.com/naoyakadota/GNSSlogger
 cd GNSSlogger
@@ -90,7 +90,8 @@ The installer asks for:
 3. FTP user ID;
 4. FTP password (input is hidden);
 5. FTP parent directory (the device/site name is appended automatically);
-6. the local GNSS data directory.
+6. a serial device only when selection is required;
+7. the local GNSS data directory.
 
 Default local data location:
 
@@ -248,16 +249,16 @@ reports.
 
 ## 8. Serial-port and baud detection
 
-New installations save `port = auto`. At startup and after every disconnect,
-the logger checks:
+At installation, `/dev/serial/by-id/` is preferred because its names are more
+stable than `/dev/ttyACM0`. One detected device is selected automatically. If
+multiple devices exist, the installer asks which one is the GNSS receiver. If
+none is connected, `port = auto` is saved.
+
+At runtime, `port = auto` checks:
 
 1. `/dev/serial/by-id/*`;
 2. USB serial devices reported by pySerial under `/dev/ttyACM*` and
    `/dev/ttyUSB*`.
-
-This allows a receiver to be replaced even when its `/dev/serial/by-id/` name
-changes. If a system has multiple NMEA serial devices, set `port` manually to
-the intended `/dev/serial/by-id/...` path.
 
 For `baud = auto`, each configured baud is tried until a `$`-prefixed sentence
 is received. A known configuration may instead use a fixed path and/or fixed
@@ -320,7 +321,7 @@ exit.
 From the original clone directory:
 
 ```bash
-cd ~/gps-logger
+cd ~/GNSSlogger
 git pull
 sudo ./setup.sh
 ```
@@ -384,19 +385,14 @@ An unwired reset pin is not fatal. If BCM17 belongs to another circuit, set
 
 Review the journal for login, path, permission, size-check, or filename-conflict
 errors. Confirm that the complete `remote_dir` is correct. The logger retains
-unverified local files and retries hourly.
+unverified local files and retries hourly.ss
 
-## 15. Security and limitations
+## 15. Security 
 
 - FTP transmits credentials and data without encryption. Use only on an
   appropriate trusted/network-controlled deployment. SFTP is not implemented.
 - `config.ini` contains the recoverable FTP password and must remain mode
   `0600`.
 - The service runs as root.
-- NMEA checksums are not validated.
-- Only text startup commands are supported.
-- Old service conflicts are resolved manually.
-- Actual receiver/FTP/GPIO behavior must be verified on deployment hardware;
-  unit tests cannot prove electrical wiring or server policy.
 
 See [CHANGELOG.md](CHANGELOG.md) for release history.

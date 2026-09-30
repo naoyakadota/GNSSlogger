@@ -2,7 +2,7 @@
 
 [English](README.md) | 日本語
 
-USB接続したGNSS受信機から、`$`で始まるNMEAセンテンスを日別テキストファイルへ記録し、完了済みファイルをFTPサーバーへ送るRaspberry Pi用サービスです。
+USB接続したGNSS受信機から`$`で始まるNMEAセンテンスを日毎テキストファイルへ記録し、記録済みファイルをFTPサーバーへ送るRaspberry Pi用サービスです。
 
 原作者: **Naoya Kadota** — https://nkadota.com
 
@@ -100,7 +100,7 @@ serviceを有効にする前に、installerは次を実行します。
 6. remote sizeを照合
 7. test fileを削除
 
-既存の親directoryには作成権限が不要です。不足directoryを作れない場合や、upload・size確認・削除に失敗した場合、serviceを有効にせずinstallationを終了します。
+既存の親directoryには作成権限が不要です。必要うなdirectoryを作れない場合や、upload・size確認・削除に失敗した場合、serviceを有効にせずインストールを終了します。
 
 最下層folder（device/site名）が既存の場合、次のように確認します。
 
@@ -110,7 +110,7 @@ Existing .log files: 127; other entries: 2
 Use this existing directory for this device? [y/N]:
 ```
 
-`y`を入力してEnterを押すと、その既存folderを使用します。異なる機器のデータを誤って混ぜないため、既定はNoです。
+`y`を入力してEnterを押すと、その既存フォルダを使用します。異なる機器のデータを誤って混ぜないため、既定はNoです。
 
 ## 5. 配置ファイルと生成ファイル
 
@@ -126,7 +126,7 @@ systemd unit                /etc/systemd/system/gps-logger.service
 GNSS観測データ               ~/GPS_data/<device-name>/
 アップロード済み観測データ   ~/GPS_data/<device-name>/Uploaded/
 ```
-インストール終了時に実際のdata pathを表示します。
+インストール終了時にデータ保存先パスを表示します。
 
 生成例:
 
@@ -280,7 +280,7 @@ root-only設定と任意GPIOへアクセスするため、serviceはrootで実�
 最初にcloneしたdirectoryで実行します。
 
 ```bash
-cd ~/gps-logger
+cd ~/GNSSlogger
 git pull
 sudo ./setup.sh
 ```
@@ -335,14 +335,10 @@ USB再接続、受信機電源、journalを確認します。必要なら`port`�
 
 journalでlogin、path、権限、size確認、同名file競合のerrorを確認してください。完全な`remote_dir`が正しいか確認します。未検証local fileは保持され、1時間ごとに再試行します。
 
-## 15. Securityと既知の制限
+## 15. セキュリティ
 
-- FTPは認証情報とdataを暗号化しません。適切に管理されたnetworkでのみ使用してください。SFTPは未実装です。
-- `config.ini`には復元可能なFTP passwordがあるため、権限`0600`を維持します。
-- serviceはrootで実行します。
-- NMEA checksumは検証しません。
-- startup commandsはtextのみです。
-- 旧service競合は手動解決です。
-- 実際の受信機・FTP・GPIO動作は現地hardwareで確認が必要です。unit testだけでは配線やserver policyを証明できません。
+- FTPは認証情報とdataを暗号化しませんs。適切に管理されたnetworkでのみ使用してください。SFTPは未実装です。
+- `config.ini`には復元可能なFTP passwordがあるため、権限`0600`を維持します。　そのため、rootのパスワード管理には注意してください。
+- serviceはrootで実行されます
 
 更新履歴は[CHANGELOG.md](CHANGELOG.md)を参照してください。
